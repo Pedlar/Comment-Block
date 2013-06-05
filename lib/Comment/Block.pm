@@ -57,3 +57,54 @@ sub filter {
     return $status;
 }
 1;
+
+__END__
+
+=head1 NAME
+
+Comment::Block - Adds block style comments to Perl
+
+=head1 SYNOPSIS
+
+  use Comment::Block;
+  #/*
+    A block
+    of commented
+    things
+  #*/
+  ..normal execution..
+
+=head1 DESCRIPTION
+
+Provide a better way of doing block comments instead of using POD or
+always false if blocks.
+
+=head1 SYNTAX HIGHLIGHTING
+
+You can add the below to ~/.vim/after/syntax/perl.vim to add Syntax Highlighting
+for the comment blocks. This is only for VIM currently but if someone sends me more
+for other editors I will add them here.
+
+  syn region perlCommentBlock     start="#/\*" end="#\*/" contains=perlTodo
+  if version < 508
+    command -nargs=+ HiLink hi link <args>
+  else
+    command -nargs=+ HiLink hi def link <args>
+  endif
+  HiLink perlCommentBlock Comment
+
+=head1 VERSION
+
+This documentation describes version 0.01.
+
+=head1 AUTHOR
+
+ Madison Koenig <pedlar AT cpan DOT org>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2013 Madison Koenig
+All rights reserved.  This program is free software; you can redistribute it and/or 
+modify it under the same terms as Perl itself.
+
+=cut
