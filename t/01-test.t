@@ -26,4 +26,26 @@ ok(1, "Code outside of comment runs find");
 ok(Test::Block::test(), "Namespaces clean");
 ok(Test::Block2::test(), "Namespace in multi file Packages not clean");
 
+my $eval_check = eval {
+    sub test {
+#/*
+        return 0;
+#*/
+        return 1;
+    }
+    test();
+};
+
+my $do_check = do {
+    sub test {
+#/*
+        return 0;
+#*/
+        return 1;
+    }
+    test();
+};
+
+ok($eval_check, "Eval was 1, not 0");
+ok($do_check, "Do block was 1, not 0");
 done_testing;
