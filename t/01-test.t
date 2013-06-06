@@ -37,13 +37,13 @@ my $eval_check = eval {
 };
 
 my $do_check = do {
-    sub test {
+    sub test2 {
 #/*
         return 0;
 #*/
         return 1;
     }
-    test();
+    test2();
 };
 
 ok($eval_check, "Eval was 1, not 0");

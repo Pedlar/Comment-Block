@@ -2,8 +2,14 @@ use strict;
 use warnings;
 package Comment::Block;
 use Filter::Util::Call;
+use vars qw($Blocks $VERSION $start $end);
 
-$Comment::Block::VERSION = "0.01";
+$VERSION = "0.01";
+
+
+
+$start = "(#\\/\\*)";
+$end   = "(#\\*\\/)";
 
 #ABSTRACT: Comment::Block - Makes Block Comments Possible
 
@@ -36,22 +42,24 @@ sub filter {
     my ($self) = @_;
     my ($status);
     $status = filter_read();
-    ++ $self->{LineNo};
+    ++ $self->{line_no};
     if ($status <= 0) {
        $self->error("EOF Reached with no Comment end.") if $self->{inBlock};
        return $status;
     }
     if ($self->{inBlock}) {
-        if (/^\s*#\/\*\s*/ ) {
-            $self->warn("Nested COMMENT START", $self->{line_no})
-        } elsif (/^\s*#\*\/\s*/) {
+        if (/^\s*$start\s*/ ) {
+            $self->warning("Nested COMMENT START", $self->{line_no})
+        } elsif (/^\s*$end\s*/) {
             $self->{inBlock} = 0;
+            s/^/#/;
         }
         s/^/#/;
-    } elsif ( /^\s*#\/\*\s*/ ) {
+    } elsif ( /^\s*$start\s*/ ) {
         $self->{inBlock} = 1;
         $self->{last_begin} = $self->{line_no};
-    } elsif ( /^\s*#\*\/\s*/ ) {
+        s/^/#/;
+    } elsif ( /^\s*$end\s*/ ) {
         $self->error("Comment Start has no Comment End", $self->{line_no});
     }
     return $status;
